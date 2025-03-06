@@ -162,5 +162,5 @@ class KitchentBotAgent:
             )
             return reply.choices[0].message.content
 
-        else:
-            return "lol ! 8==D"
+        # else:
+        #     return "lol ! 8==D" + str(response.choices[0].message.content)
