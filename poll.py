@@ -80,7 +80,7 @@ def is_weekday():
 #     time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
 #     time(hour=19, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
 # ])
-@tasks.loop(seconds=10)
+@tasks.loop(minutes=3)
 async def meal_poll(bot, channel, agent):
     """
     Send a poll at 10pm PST
@@ -104,7 +104,7 @@ async def meal_poll(bot, channel, agent):
     poll_message = await send_poll(channel, question)
     
     # Wait 10 minutes
-    await asyncio.sleep(5)  # 10 minutes in seconds
+    await asyncio.sleep(15)  # 10 minutes in seconds
     
     # Collect results
     results = await collect_poll_results(poll_message, emoji_numbers)
