@@ -19,7 +19,7 @@ async def send_poll(channel, question, options):
     - The poll message object
     """
     # Define emoji options (up to 10)
-    emoji_numbers = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+    emoji_numbers = ['1️😋', '2️👍', '3️😐', '4️👎', '5️😢']
     
     # Create poll embed
     embed = discord.Embed(
