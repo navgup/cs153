@@ -33,6 +33,16 @@ CLASSIFY_MESSAGE_PROMPT = """
 
     """
 
+MENU_QUESTION_PROMPT = """
+
+    The user is asking about the menu for this week. 
+    The menu is attached below as a csv file: 
+
+
+"""
+
+
+
 
 class KitchentBotAgent:
     def __init__(self):
@@ -57,20 +67,7 @@ class KitchentBotAgent:
         Add a new feedback to the feedback class
         """
         self.feedback.add_feedback(user, message)
-
-    def question_about_menu(self, message: str):
-        """
-        Question about the menu
-        """
-        # TODO: Arnav implement this
-        pass
-
-    def question_about_feedback(self, message: str):
-        """
-        Question about the feedback
-        """
-        # TODO: Arnav implement this
-        pass
+              
 
     async def run(self, message: discord.Message):
         """
@@ -104,4 +101,51 @@ class KitchentBotAgent:
             messages=messages,
         )
 
-        return response.choices[0].message.content
+        if response.choices[0].message.content == "new feedback":
+
+            ADD_FEEDBACK_PROMPT = f"""
+
+            The user is providing feedback about the meal today. Here is the menu for today:
+
+            {self.menus.get_latest_menu()}
+
+            The user feedback is: {message.content}
+
+            """
+
+
+            self.add_new_feedback(message.author.name, message.content)
+
+        elif response.choices[0].message.content == "question about menu":
+            cur_menu = self.menus.get_latest_menu() 
+
+            messages = [
+                {"role": "system", "content": MENU_QUESTION_PROMPT + cur_menu},
+                {"role": "user", "content": message},
+            ]
+
+            reply = await self.client.chat.complete_async(
+                model=MISTRAL_MODEL,
+                messages=messages,
+            )
+            return reply.choices[0].message.content 
+        
+        elif response.choices[0].message.content == "question about feedback":
+            feedback = self.feedback.get_feedback()
+
+            
+
+            messages = [
+                {"role": "system", "content": "The feedback is: " + feedback},
+                {"role": "user", "content": message.content},
+            ]
+
+            reply = await self.client.chat.complete_async(
+                model=MISTRAL_MODEL,
+                messages=messages,
+            )
+            return reply.choices[0].message.content
+
+
+        else:
+            return "lol ! 8==D"
