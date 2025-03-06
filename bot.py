@@ -1,4 +1,5 @@
 import os
+from poll import send_poll
 import discord
 import logging
 
@@ -55,7 +56,8 @@ async def on_message(message: discord.Message):
     # Process the message with the agent you wrote
     # Open up the agent.py file to customize the agent
     logger.info(f"Processing message from {message.author}: {message.content}")
-    response = await agent.run(message)
+    # response = await agent.run(message)
+    response = await send_poll(message.channel, "Did you like today's meal?", ["Yes", "No", "Neutral"])
 
     # Send the response back to the channel
     await message.reply(response)
