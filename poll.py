@@ -6,7 +6,7 @@ from discord.ext import tasks
 from datetime import datetime, time, timedelta
 import pytz
 
-async def send_poll(channel, question, options):
+async def send_poll(channel, question, options=None):
     """
     Send a poll to the specified channel
     
@@ -29,9 +29,10 @@ async def send_poll(channel, question, options):
     
     # Add options to the embed
     description = ""
-    for i, option in enumerate(options):
-        if i < len(emoji_numbers):  # Limit to 10 options
-            description += f"{emoji_numbers[i]} {option}\n\n"
+    if options is not None:
+        for i, option in enumerate(options):
+            if i < len(emoji_numbers):  # Limit to 10 options
+                description += f"{emoji_numbers[i]} {option}\n\n"
     
     embed.description = description
     embed.set_footer(text="React to vote! Poll closes in 10 minutes.")
@@ -40,12 +41,12 @@ async def send_poll(channel, question, options):
     poll_message = await channel.send(embed=embed)
     
     # Add reaction options
-    for i in range(min(len(options), len(emoji_numbers))):
+    for i in range(len(emoji_numbers)):
         await poll_message.add_reaction(emoji_numbers[i])
     
     return poll_message
 
-async def collect_poll_results(message, options, emoji_numbers):
+async def collect_poll_results(message, emoji_numbers):
     """
     Collect results from a poll after it ends
     
@@ -60,7 +61,7 @@ async def collect_poll_results(message, options, emoji_numbers):
     results = []
     message = await message.channel.fetch_message(message.id)
     
-    for i, option in enumerate(options):
+    for i, option in enumerate(emoji_numbers):
         if i < len(emoji_numbers):
             reaction = discord.utils.get(message.reactions, emoji=emoji_numbers[i])
             count = reaction.count - 1 if reaction else 0  # Subtract 1 to exclude bot's reaction
@@ -94,16 +95,16 @@ async def meal_poll(bot, channel, agent):
     meal_type = "dinner"
     
     question = f"How was today's {meal_type}?"
-    options = ["Great! 😋", "Good 👍", "Okay 😐", "Not good 👎", "Bad 😢"]
+    # options = ["Great! 😋", "Good 👍", "Okay 😐", "Not good 👎", "Bad 😢"]
     emoji_numbers = ['1️😋', '2️👍', '3️😐', '4️👎', '5️😢']
     print(f"Sending poll to channel: {channel.name}")
-    poll_message = await send_poll(channel, question, options)
+    poll_message = await send_poll(channel, question)
     
     # Wait 10 minutes
     await asyncio.sleep(10)  # 10 minutes in seconds
     
     # Collect results
-    results = await collect_poll_results(poll_message, options, emoji_numbers)
+    results = await collect_poll_results(poll_message, emoji_numbers)
     
     # Store results in feedback
     current_date = datetime.now().strftime("%m/%d")
