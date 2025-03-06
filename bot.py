@@ -1,5 +1,5 @@
 import os
-from poll import send_poll
+from poll import send_poll, setup_meal_polls
 import discord
 import logging
 
@@ -37,7 +37,13 @@ async def on_ready():
     https://discordpy.readthedocs.io/en/latest/api.html#discord.on_ready
     """
     logger.info(f"{bot.user} has connected to Discord!")
-
+    
+    # Get the channel ID from environment variable or use a default
+    channel_id = int(os.getenv("POLL_CHANNEL_ID", "0"))  # Replace 0 with your default channel ID
+    if channel_id:
+        setup_meal_polls(bot, channel_id, agent)
+    else:
+        logger.warning("No POLL_CHANNEL_ID set in .env file")
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -56,9 +62,8 @@ async def on_message(message: discord.Message):
     # Process the message with the agent you wrote
     # Open up the agent.py file to customize the agent
     logger.info(f"Processing message from {message.author}: {message.content}")
-    # response = await agent.run(message)
-    response = await send_poll(message.channel, "Did you like today's meal?", ["Yes", "No", "Neutral"])
-
+    response = await agent.run(message)
+    
     # Send the response back to the channel
     await message.reply(response)
 
