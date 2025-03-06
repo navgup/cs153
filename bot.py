@@ -4,7 +4,7 @@ import logging
 
 from discord.ext import commands
 from dotenv import load_dotenv
-from agent import MistralAgent
+from agent import KitchentBotAgent
 
 PREFIX = "!"
 
@@ -20,7 +20,7 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
 # Import the Mistral agent from the agent.py file
-agent = MistralAgent()
+agent = KitchentBotAgent()
 
 
 # Get the token from the environment variables
@@ -59,6 +59,18 @@ async def on_message(message: discord.Message):
 
     # Send the response back to the channel
     await message.reply(response)
+
+
+# Bot sends polls at 1pm and 7pm PST every weekday
+"""
+Bot should send a poll at 1pm and 7pm PST every weekday after the meal, 
+asking whether users liked the meal or not. Bot should then save the poll results 
+to feedback class after 10 minutes.
+"""
+# TODO: ETHAN implement this
+
+# to store:
+agent.feedback.add_poll_result(poll_name, poll_results)
 
 
 # Commands

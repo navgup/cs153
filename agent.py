@@ -1,15 +1,18 @@
 import os
 from mistralai import Mistral
 import discord
+from feedback import Feedback
+from menus import Menus
 
 MISTRAL_MODEL = "mistral-large-latest"
 SYSTEM_PROMPT = "You are a helpful assistant."
 
 
-class MistralAgent:
+class KitchentBotAgent:
     def __init__(self):
         MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-
+        self.feedback = Feedback()
+        self.menus = Menus()
         self.client = Mistral(api_key=MISTRAL_API_KEY)
 
     async def run(self, message: discord.Message):

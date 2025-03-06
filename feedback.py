@@ -1,0 +1,56 @@
+# feedback.py
+# This file implements a feedback class
+"""
+Feedback Abstraction:
+- init
+feedback: dict
+poll_results: dict
+- add poll result (poll_name, poll_results)
+poll_result format:
+poll_name string
+poll_results: [{“lunch 2/10”: 0.1}, {“dinner 2/10”: 0.2}, … {“dinner 2/14”: }]
+- add feedback (user: str, feedback_message: str)
+"""
+
+
+class Feedback:
+    def __init__(self):
+        """Initialize empty feedback and poll results dictionaries"""
+        self.feedback = {}  # Store user feedback messages
+        self.poll_results = {}  # Store poll results by poll name
+
+    def add_poll_result(self, poll_name: str, poll_results: list):
+        """
+        Add poll results for a given poll
+        Args:
+            poll_name: Name/identifier of the poll
+            poll_results: List of dictionaries containing poll results
+        """
+        self.poll_results[poll_name] = poll_results
+
+    def add_feedback(self, user: str, feedback_message: str):
+        """
+        Add feedback from a user
+        Args:
+            user: Username/identifier of feedback provider
+            feedback_message: The feedback message content
+        """
+        if user not in self.feedback:
+            self.feedback[user] = []
+        self.feedback[user].append(feedback_message)
+
+    def get_feedback(self):
+        """
+        Get all feedback messages
+        Returns:
+            Dictionary containing all feedback messages
+        """
+        return self.feedback
+
+    def get_poll_results(self):
+        """
+        Get all poll results
+        Returns:
+            Dictionary containing all poll results
+        """
+        return self.poll_results
