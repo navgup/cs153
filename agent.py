@@ -34,8 +34,6 @@ CLASSIFY_MESSAGE_PROMPT = """
     """
 
 
-
-
 class KitchentBotAgent:
     def __init__(self):
         MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
@@ -92,7 +90,9 @@ class KitchentBotAgent:
                 if attachment.filename.endswith(".csv"):
                     # Read the CSV content as text
                     csv_content = await attachment.read()
+                    csv_content = csv_content.decode("utf-8")
                     self.add_new_menu(csv_content)
+                    return "Menu added successfully!"  # + csv_content[:100]
 
         messages = [
             {"role": "system", "content": CLASSIFY_MESSAGE_PROMPT},
@@ -103,6 +103,5 @@ class KitchentBotAgent:
             model=MISTRAL_MODEL,
             messages=messages,
         )
-
 
         return response.choices[0].message.content
