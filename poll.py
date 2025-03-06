@@ -101,7 +101,7 @@ async def meal_poll(bot, channel, agent):
     poll_message = await send_poll(channel, question)
     
     # Wait 10 minutes
-    await asyncio.sleep(6000)  # 10 minutes in seconds
+    await asyncio.sleep(10)  # 10 minutes in seconds
     
     # Collect results
     results = await collect_poll_results(poll_message, emoji_numbers)
