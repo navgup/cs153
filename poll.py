@@ -35,7 +35,7 @@ async def send_poll(channel, question, options=None):
                 description += f"{emoji_numbers[i]} {option}\n\n"
     
     embed.description = description
-    embed.set_footer(text="React to vote! Poll closes in 10 minutes.")
+    embed.set_footer(text="React to vote! Poll closes in 1 hour.")
     
     # Send the poll message
     poll_message = await channel.send(embed=embed)
@@ -73,11 +73,11 @@ def is_weekday():
     """Check if today is a weekday"""
     return datetime.now().weekday() < 5
 
-# @tasks.loop(time=[
-#     time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
-#     time(hour=19, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
-# # ])
-@tasks.loop(seconds=20)
+@tasks.loop(time=[
+    time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
+    time(hour=19, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
+])
+# @tasks.loop(seconds=20)
 async def meal_poll(bot, channel, agent):
     """
     Send a poll at 10pm PST
@@ -101,7 +101,7 @@ async def meal_poll(bot, channel, agent):
     poll_message = await send_poll(channel, question)
     
     # Wait 10 minutes
-    await asyncio.sleep(10)  # 10 minutes in seconds
+    await asyncio.sleep(6000)  # 10 minutes in seconds
     
     # Collect results
     results = await collect_poll_results(poll_message, emoji_numbers)
