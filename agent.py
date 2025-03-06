@@ -36,7 +36,23 @@ CLASSIFY_MESSAGE_PROMPT = """
 MENU_QUESTION_PROMPT = """
 
     The user is asking about the menu for this week. 
-    The menu is attached below as a csv file: 
+
+    If the user asks a question about the macronutrient profile of the menu,
+    or an item on the menu, please give your best breakdown. 
+
+    Example:
+    User: “Can you give me the macros for the Wednesday dinner?”
+
+    Response:
+    “Per serving, here’s the approximate macronutrient profile:
+
+    Calories: ~450
+    Protein: ~35g
+    Carbohydrates: ~40g
+    Fat: ~15g
+    ”
+
+    The menu is attached below as a csv file:
 
 
 """
