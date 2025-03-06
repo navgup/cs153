@@ -37,15 +37,18 @@ async def on_ready():
     https://discordpy.readthedocs.io/en/latest/api.html#discord.on_ready
     """
     logger.info(f"{bot.user} has connected to Discord!")
-    
+
     # Get the channel ID from environment variable or use a default
-    channel_id = int(os.getenv("POLL_CHANNEL_ID", "0"))  # Replace 0 with your default channel ID
+    channel_id = int(
+        os.getenv("POLL_CHANNEL_ID", "0")
+    )  # Replace 0 with your default channel ID
     if channel_id:
         setup_meal_polls(bot, channel_id, agent)
         print(f"Started meal polls in channel: {channel_id}")
         # print(f"Started meal polls in channel: {channel_id}")
     else:
         logger.warning("No POLL_CHANNEL_ID set in .env file")
+
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -65,9 +68,8 @@ async def on_message(message: discord.Message):
     # Open up the agent.py file to customize the agent
     logger.info(f"Processing message from {message.author}: {message.content}")
     response = await agent.run(message)
-    
-    # Send the response back to the channel
-    await message.reply(response)
+    if response:
+        await message.reply(response)
 
 
 # Bot sends polls at 1pm and 7pm PST every weekday
