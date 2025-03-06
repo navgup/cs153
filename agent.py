@@ -3,7 +3,7 @@ from mistralai import Mistral
 import discord
 from feedback import Feedback
 from menus import Menus
-from datetime import datetime
+from datetime import datetime, timedelta
 
 MISTRAL_MODEL = "mistral-large-latest"
 SYSTEM_PROMPT = "You are a helpful assistant."
@@ -22,7 +22,7 @@ class KitchentBotAgent:
         """
         this_week_start_date = datetime.now().date()
         # Adjust to previous Sunday if not already Sunday
-        this_week_start_date = this_week_start_date - datetime.timedelta(
+        this_week_start_date = this_week_start_date - timedelta(
             days=this_week_start_date.weekday()
         )
         self.menus.add_menu(this_week_start_date, message)
@@ -64,8 +64,9 @@ class KitchentBotAgent:
             for attachment in message.attachments:
                 if attachment.filename.endswith(".csv"):
                     # Read the CSV content as text
-                    csv_content = await attachment.text()
+                    csv_content = await attachment.read()
                     self.add_new_menu(csv_content)
+                    return "Menu added successfully!"
 
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},
