@@ -23,6 +23,8 @@ class Menus:
         return self.menus[week_start_date]
 
     def get_latest_menu(self):
+        if not self.menus:
+            return "No menus available"
         return self.menus[max(self.menus.keys())]
 
     def get_all_menus(self):
