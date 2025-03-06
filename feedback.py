@@ -27,6 +27,8 @@ class Feedback:
             poll_results: List of dictionaries containing poll results
         """
         self.poll_results[poll_name] = poll_results
+        print(f"Added poll result for {poll_name}: {poll_results}")
+        print(f"Poll results: {self.poll_results}")
 
     def add_feedback(self, user: str, feedback_message: str):
         """
@@ -38,6 +40,7 @@ class Feedback:
         if user not in self.feedback:
             self.feedback[user] = []
         self.feedback[user].append(feedback_message)
+        print(f"Added feedback from {user}: {feedback_message}")
 
     def get_feedback(self):
         """
@@ -45,6 +48,7 @@ class Feedback:
         Returns:
             Dictionary containing all feedback messages
         """
+        print(f"Getting feedback: {self.feedback}")
         return self.feedback
 
     def get_poll_results(self):
@@ -53,4 +57,6 @@ class Feedback:
         Returns:
             Dictionary containing all poll results
         """
+        print(f"Getting poll results: {self.poll_results}")
+
         return self.poll_results

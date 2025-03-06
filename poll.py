@@ -72,10 +72,11 @@ def is_weekday():
     """Check if today is a weekday"""
     return datetime.now().weekday() < 5
 
-@tasks.loop(time=[
-    time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
-    time(hour=22, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
-])
+# @tasks.loop(time=[
+#     time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
+#     time(hour=19, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
+# # ])
+@tasks.loop(seconds=20)
 async def meal_poll(bot, channel, agent):
     """
     Send a poll at 10pm PST
