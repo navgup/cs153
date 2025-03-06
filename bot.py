@@ -42,6 +42,8 @@ async def on_ready():
     channel_id = int(os.getenv("POLL_CHANNEL_ID", "0"))  # Replace 0 with your default channel ID
     if channel_id:
         setup_meal_polls(bot, channel_id, agent)
+        print(f"Started meal polls in channel: {channel_id}")
+        # print(f"Started meal polls in channel: {channel_id}")
     else:
         logger.warning("No POLL_CHANNEL_ID set in .env file")
 

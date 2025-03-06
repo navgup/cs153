@@ -72,32 +72,34 @@ def is_weekday():
     """Check if today is a weekday"""
     return datetime.now().weekday() < 5
 
-@tasks.loop(time=[time(hour=13, tzinfo=pytz.timezone('US/Pacific')), 
-                 time(hour=24, tzinfo=pytz.timezone('US/Pacific'))])
+@tasks.loop(time=[
+    time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
+    time(hour=22, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
+])
 async def meal_poll(bot, channel, agent):
     """
-    Send a poll at 1pm and 7pm PST on weekdays
+    Send a poll at 10pm PST
     
     Parameters:
     - bot: The discord bot instance
     - channel: The discord channel to send polls to
     - agent: The bot agent instance for storing results
     """
+    print("Checking if it's a weekday")
     if not is_weekday():
+        print("Not a weekday")
         return
         
-    current_hour = datetime.now(pytz.timezone('US/Pacific')).hour
-    is_lunch = current_hour == 13
-    meal_type = "lunch" if is_lunch else "dinner"
+    meal_type = "dinner"
     
     question = f"How was today's {meal_type}?"
     options = ["Great! 😋", "Good 👍", "Okay 😐", "Not good 👎", "Bad 😢"]
     emoji_numbers = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣']
-    
+    print(f"Sending poll to channel: {channel.name}")
     poll_message = await send_poll(channel, question, options)
     
     # Wait 10 minutes
-    await asyncio.sleep(600)
+    await asyncio.sleep(10)  # 10 minutes in seconds
     
     # Collect results
     results = await collect_poll_results(poll_message, options, emoji_numbers)
