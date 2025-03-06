@@ -86,7 +86,6 @@ class KitchentBotAgent:
         # The simplest form of an agent
         # Send the message's content to Mistral's API and return Mistral's response
 
-<<<<<<< Updated upstream
         # if message has a csv file, add new menu
         if message.attachments:
             for attachment in message.attachments:
@@ -94,9 +93,6 @@ class KitchentBotAgent:
                     # Read the CSV content as text
                     csv_content = await attachment.read()
                     self.add_new_menu(csv_content)
-=======
-
->>>>>>> Stashed changes
 
         messages = [
             {"role": "system", "content": CLASSIFY_MESSAGE_PROMPT},
