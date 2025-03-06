@@ -95,7 +95,7 @@ async def meal_poll(bot, channel, agent):
     
     question = f"How was today's {meal_type}?"
     options = ["Great! 😋", "Good 👍", "Okay 😐", "Not good 👎", "Bad 😢"]
-    emoji_numbers = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣']
+    emoji_numbers = ['1️😋', '2️👍', '3️😐', '4️👎', '5️😢']
     print(f"Sending poll to channel: {channel.name}")
     poll_message = await send_poll(channel, question, options)
     
