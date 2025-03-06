@@ -59,6 +59,14 @@ class KitchentBotAgent:
         # The simplest form of an agent
         # Send the message's content to Mistral's API and return Mistral's response
 
+        # if message has a csv file, add new menu
+        if message.attachments:
+            for attachment in message.attachments:
+                if attachment.filename.endswith(".csv"):
+                    # Read the CSV content as text
+                    csv_content = await attachment.text()
+                    self.add_new_menu(csv_content)
+
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": message.content},
