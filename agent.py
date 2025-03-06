@@ -16,6 +16,14 @@ class KitchentBotAgent:
         self.client = Mistral(api_key=MISTRAL_API_KEY)
 
     async def run(self, message: discord.Message):
+        """
+        Super function that gets the intent of the user's message and
+        calls the appropriate function:
+        - new menu
+        - new feedback
+        - question about menu
+        - question about feedback
+        """
         # The simplest form of an agent
         # Send the message's content to Mistral's API and return Mistral's response
 
