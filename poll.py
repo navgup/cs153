@@ -63,7 +63,10 @@ async def collect_poll_results(message, emoji_numbers):
     
     for i, option in enumerate(emoji_numbers):
         if i < len(emoji_numbers):
-            reaction = discord.utils.get(message.reactions, emoji=emoji_numbers[i])
+            print(f"Reaction:{emoji_numbers[i][-1]}")
+            print("message.reactions:", message.reactions)
+            reaction = discord.utils.get(message.reactions, emoji=f"{emoji_numbers[i][-1]}")
+            print(f"Reaction: {reaction}")
             count = reaction.count - 1 if reaction else 0  # Subtract 1 to exclude bot's reaction
             results.append({option: count})
     
@@ -77,7 +80,7 @@ def is_weekday():
 #     time(hour=13, tzinfo=pytz.timezone('US/Pacific')),  # 1 PM PST
 #     time(hour=19, tzinfo=pytz.timezone('US/Pacific'))   # 7 PM PST
 # ])
-@tasks.loop(minutes=2)
+@tasks.loop(seconds=10)
 async def meal_poll(bot, channel, agent):
     """
     Send a poll at 10pm PST
@@ -101,7 +104,7 @@ async def meal_poll(bot, channel, agent):
     poll_message = await send_poll(channel, question)
     
     # Wait 10 minutes
-    await asyncio.sleep(10)  # 10 minutes in seconds
+    await asyncio.sleep(5)  # 10 minutes in seconds
     
     # Collect results
     results = await collect_poll_results(poll_message, emoji_numbers)
