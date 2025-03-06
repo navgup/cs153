@@ -70,7 +70,7 @@ to feedback class after 10 minutes.
 # TODO: ETHAN implement this
 
 # to store:
-agent.feedback.add_poll_result(poll_name, poll_results)
+# agent.feedback.add_poll_result(poll_name, poll_results)
 
 
 # Commands
