@@ -30,17 +30,16 @@ class Feedback:
         print(f"Added poll result for {poll_name}: {poll_results}")
         print(f"Poll results: {self.poll_results}")
 
-    def add_feedback(self, user: str, feedback_message: str):
+    def add_feedback(self, date: str, feedback_message: str):
         """
-        Add feedback from a user
+        Add feedback from a date
         Args:
-            user: Username/identifier of feedback provider
+            date: Date of feedback
             feedback_message: The feedback message content
         """
-        if user not in self.feedback:
-            self.feedback[user] = []
-        self.feedback[user].append(feedback_message)
-        print(f"Added feedback from {user}: {feedback_message}")
+        if date not in self.feedback:
+            self.feedback[date] = []
+        self.feedback[date].append(feedback_message)
 
     def get_feedback(self):
         """

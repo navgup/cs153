@@ -42,8 +42,6 @@ MENU_QUESTION_PROMPT = """
 """
 
 
-
-
 class KitchentBotAgent:
     def __init__(self):
         MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
@@ -62,12 +60,11 @@ class KitchentBotAgent:
         )
         self.menus.add_menu(this_week_start_date, message)
 
-    def add_new_feedback(self, user: str, message: str):
+    def add_new_feedback(self, date: str, message: str):
         """
         Add a new feedback to the feedback class
         """
-        self.feedback.add_feedback(user, message)
-              
+        self.feedback.add_feedback(date, message)
 
     async def run(self, message: discord.Message):
         """
@@ -102,41 +99,39 @@ class KitchentBotAgent:
         )
 
         if response.choices[0].message.content == "new feedback":
-
             ADD_FEEDBACK_PROMPT = f"""
 
-            The user is providing feedback about the meal today. Here is the menu for today:
+            The user is providing feedback about the meal today. Here is the menu for the week:
 
             {self.menus.get_latest_menu()}
 
+            Today's date is: {datetime.now().strftime("%Y-%m-%d")}
+
             The user feedback is: {message.content}
 
+            Please return a processed feedback message that explains the user's feedback with context from the menu on
+            the meal the user is referring to.
+
             """
-
-
-            self.add_new_feedback(message.author.name, message.content)
-
-        elif response.choices[0].message.content == "question about menu":
-            cur_menu = self.menus.get_latest_menu() 
-
             messages = [
-                {"role": "system", "content": MENU_QUESTION_PROMPT + cur_menu},
-                {"role": "user", "content": message},
+                {"role": "system", "content": ADD_FEEDBACK_PROMPT},
+                {"role": "user", "content": message.content},
             ]
 
             reply = await self.client.chat.complete_async(
                 model=MISTRAL_MODEL,
                 messages=messages,
             )
-            return reply.choices[0].message.content 
-        
-        elif response.choices[0].message.content == "question about feedback":
-            feedback = self.feedback.get_feedback()
+            self.add_new_feedback(
+                message.created_at.strftime("%Y-%m-%d"), message.content
+            )
+            return "Thanks for your feedback! We will take it into account."
 
-            
+        elif response.choices[0].message.content == "question about menu":
+            cur_menu = self.menus.get_latest_menu()
 
             messages = [
-                {"role": "system", "content": "The feedback is: " + feedback},
+                {"role": "system", "content": MENU_QUESTION_PROMPT + cur_menu},
                 {"role": "user", "content": message.content},
             ]
 
@@ -146,6 +141,26 @@ class KitchentBotAgent:
             )
             return reply.choices[0].message.content
 
+        elif response.choices[0].message.content == "question about feedback":
+            feedback = self.feedback.get_feedback()
+            poll_results = self.feedback.get_poll_results()
+
+            messages = [
+                {
+                    "role": "system",
+                    "content": "The feedback is: "
+                    + str(feedback)
+                    + "The poll results are: "
+                    + str(poll_results),
+                },
+                {"role": "user", "content": message.content},
+            ]
+
+            reply = await self.client.chat.complete_async(
+                model=MISTRAL_MODEL,
+                messages=messages,
+            )
+            return reply.choices[0].message.content
 
         else:
             return "lol ! 8==D"
