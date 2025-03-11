@@ -4,6 +4,7 @@ import discord
 from feedback import Feedback
 from menus import Menus
 from datetime import datetime, timedelta
+import asyncio
 
 MISTRAL_MODEL = "mistral-large-latest"
 SYSTEM_PROMPT = "You are a helpful assistant."
@@ -114,6 +115,8 @@ class KitchentBotAgent:
             messages=messages,
         )
 
+        # add delay for rate limit avoidance for 1 second
+        await asyncio.sleep(1)
         if response.choices[0].message.content == "new feedback":
             ADD_FEEDBACK_PROMPT = f"""
 
