@@ -95,7 +95,16 @@ async def meal_poll(bot, channel, agent):
         print("Not a weekday")
         return
         
-    meal_type = "dinner"
+    # Determine meal type based on current time
+    current_time = datetime.now(pytz.timezone('US/Pacific'))
+    lunch_time = current_time.replace(hour=13, minute=0)
+    dinner_time = current_time.replace(hour=19, minute=0)
+    
+    # Calculate time differences
+    time_to_lunch = abs((current_time - lunch_time).total_seconds())
+    time_to_dinner = abs((current_time - dinner_time).total_seconds())
+    
+    meal_type = "lunch" if time_to_lunch < time_to_dinner else "dinner"
     
     question = f"How was today's {meal_type}?"
     # options = ["Great! 😋", "Good 👍", "Okay 😐", "Not good 👎", "Bad 😢"]
